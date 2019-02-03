@@ -1,0 +1,20 @@
+{
+  "name": "hugo-aws-cdk",
+  "version": "0.1.0",
+  "bin": {
+    "hugo-aws-cdk": "bin/hugo-aws-cdk.js"
+  },
+  "scripts": {
+    "build": "tsc",
+    "watch": "tsc -w",
+    "cdk": "cdk"
+  },
+  "devDependencies": {
+    "@types/node": "^8.9.4",
+    "typescript": "^3.1.2",
+    "aws-cdk": "^0.22.0"
+  },
+  "dependencies": {
+    "@aws-cdk/cdk": "^0.22.0"
+  }
+}
