@@ -15,6 +15,11 @@
     "aws-cdk": "^0.22.0"
   },
   "dependencies": {
+    "@aws-cdk/aws-codebuild": "^0.22.0",
+    "@aws-cdk/aws-codecommit": "^0.22.0",
+    "@aws-cdk/aws-codepipeline": "^0.22.0",
+    "@aws-cdk/aws-iam": "^0.22.0",
+    "@aws-cdk/aws-s3": "^0.22.0",
     "@aws-cdk/cdk": "^0.22.0"
   }
 }
