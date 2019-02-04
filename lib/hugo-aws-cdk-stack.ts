@@ -56,14 +56,14 @@ export class HugoAwsCdkStack extends cdk.Stack {
           },
           post_build: {
             commands: [
-              `aws s3 sync --acl "public-read" public/ s3://${websiteBucket.bucketName}`
             ],
           }
         },
         artifacts: {
           'files': [
-            'public/**/*'
+            '**/*'
           ],
+          'base-directory': 'public',
           'name': '$(AWS_REGION)-$(date +%Y-%m-%d)' 
         },
       }
@@ -96,8 +96,13 @@ export class HugoAwsCdkStack extends cdk.Stack {
     repo.addToPipeline(sourceStage, 'CodeCommit');
 
     const buildStage = pipeline.addStage('Build');
-    project.addToPipeline(buildStage, 'CodeBuild');
+    const buildAction = project.addToPipeline(buildStage, 'CodeBuild');
 
-    // pipeline.addStage('Deploy');
+    const deployStage = pipeline.addStage('Deploy');
+    new s3.PipelineDeployAction(this, 'S3Deploy', {
+      stage: deployStage,
+      bucket: websiteBucket,
+      inputArtifact: buildAction.outputArtifact
+  });
   }
 }
