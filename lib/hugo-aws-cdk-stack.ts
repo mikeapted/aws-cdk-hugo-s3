@@ -9,17 +9,14 @@ export class HugoAwsCdkStack extends cdk.Stack {
   constructor(scope: cdk.App, id: string, props?: cdk.StackProps) {
     super(scope, id, props);
 
-    // The code that defines your stack goes here
+    // Repository for source code
 
     const repo = new codecommit.Repository(this, 'CodeCommitRepository' ,{
       repositoryName: 'mikeapted.com-hugo',
       description: 'My personal website'
     });
 
-    const websiteBucket = new s3.Bucket(this, 'WebsiteBucket', {
-      websiteIndexDocument: 'index.html'
-    });
-    websiteBucket.grantPublicAccess();
+    // CodeBuild project to import submodules (themes) and generate static site content
 
     const project = new codebuild.PipelineProject(this, 'CodeBuildProject', {
       buildSpec: {
@@ -42,7 +39,7 @@ export class HugoAwsCdkStack extends cdk.Stack {
               'git config --global credential.helper "!aws codecommit credential-helper $@"',
               'git config --global credential.UseHttpPath true',
               'git init',
-              'git remote add origin https://git-codecommit.us-east-1.amazonaws.com/v1/repos/mikeapted.com-hugo',
+              `git remote add origin ${repo.repositoryCloneUrlHttp}`,
               'git fetch',
               'git checkout -f -t origin/master',
               'git submodule init',
@@ -52,10 +49,6 @@ export class HugoAwsCdkStack extends cdk.Stack {
           build: {
             commands: [
               'hugo'
-            ],
-          },
-          post_build: {
-            commands: [
             ],
           }
         },
@@ -69,6 +62,8 @@ export class HugoAwsCdkStack extends cdk.Stack {
       }
     });
 
+    // Permission to access repo
+
     project.addToRolePolicy(
       new iam.PolicyStatement()
         .addResource(repo.repositoryArn)
@@ -79,14 +74,14 @@ export class HugoAwsCdkStack extends cdk.Stack {
         .addAction('codecommit:GitPull')
     );
 
-    project.addToRolePolicy(
-      new iam.PolicyStatement()
-        .addResource(`${websiteBucket.bucketArn}`)
-        .addResource(`${websiteBucket.bucketArn}/*`)
-        .addAction('s3:PutObject*')
-        .addAction('s3:DeleteObject')
-        .addAction('s3:List*')
-    );
+    // Target bucket for static hosting
+
+    const websiteBucket = new s3.Bucket(this, 'WebsiteBucket', {
+      websiteIndexDocument: 'index.html'
+    });
+    websiteBucket.grantPublicAccess();
+
+    // CodePipeline to wrap it all together
 
     const pipeline = new codepipeline.Pipeline(this, 'CodePipeline', {
       pipelineName: 'HugoCodePipeline',
@@ -103,6 +98,6 @@ export class HugoAwsCdkStack extends cdk.Stack {
       stage: deployStage,
       bucket: websiteBucket,
       inputArtifact: buildAction.outputArtifact
-  });
+    });
   }
 }
