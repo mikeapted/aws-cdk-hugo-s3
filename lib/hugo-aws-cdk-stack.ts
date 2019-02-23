@@ -1,4 +1,5 @@
 import cdk = require('@aws-cdk/cdk');
+// import cloudfront = require('@aws-cdk/aws-cloudfront');
 import codebuild = require('@aws-cdk/aws-codebuild');
 import codecommit = require('@aws-cdk/aws-codecommit');
 import codepipeline = require('@aws-cdk/aws-codepipeline');
@@ -9,11 +10,17 @@ export class HugoAwsCdkStack extends cdk.Stack {
   constructor(scope: cdk.App, id: string, props?: cdk.StackProps) {
     super(scope, id, props);
 
+    // Setup based on envrionment variables
+
+    const domainName = process.env.DOMAIN ? process.env.DOMAIN : 'my.static.site';
+    const hugoVersion = process.env.HUGO_VERSION ? process.env.HUGO_VERSION : '0.54.0';
+    const hugoSHA256 = process.env.HUGO_SHA256 ? process.env.HUGO_SHA256 : '76f90287c12a682c9137b85146c406be410b2b30b0df7367f02ee7c4142bb416';
+
     // Repository for source code
 
     const repo = new codecommit.Repository(this, 'CodeCommitRepository' ,{
-      repositoryName: 'mikeapted.com-hugo',
-      description: 'My personal website'
+      repositoryName: `${domainName}-hugo`,
+      description: 'My static website project'
     });
 
     // CodeBuild project to import submodules (themes) and generate static site content
@@ -23,8 +30,8 @@ export class HugoAwsCdkStack extends cdk.Stack {
         version: '0.2',
         env: {
           variables: {
-            'HUGO_VERSION': '0.54.0',
-            'HUGO_SHA256': '76f90287c12a682c9137b85146c406be410b2b30b0df7367f02ee7c4142bb416'
+            'HUGO_VERSION': hugoVersion,
+            'HUGO_SHA256': hugoSHA256
           }
         },
         phases: {
