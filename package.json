@@ -12,15 +12,15 @@
   "devDependencies": {
     "@types/node": "^8.9.4",
     "typescript": "^3.1.2",
-    "aws-cdk": "^0.22.0"
+    "aws-cdk": "^0.24.1"
   },
   "dependencies": {
     "@aws-cdk/aws-cloudfront": "^0.24.1",
-    "@aws-cdk/aws-codebuild": "^0.23.0",
-    "@aws-cdk/aws-codecommit": "^0.23.0",
-    "@aws-cdk/aws-codepipeline": "^0.23.0",
-    "@aws-cdk/aws-iam": "^0.23.0",
-    "@aws-cdk/aws-s3": "^0.23.0",
-    "@aws-cdk/cdk": "^0.23.0"
+    "@aws-cdk/aws-codebuild": "^0.24.1",
+    "@aws-cdk/aws-codecommit": "^0.24.1",
+    "@aws-cdk/aws-codepipeline": "^0.24.1",
+    "@aws-cdk/aws-iam": "^0.24.1",
+    "@aws-cdk/aws-s3": "^0.24.1",
+    "@aws-cdk/cdk": "^0.24.1"
   }
 }
