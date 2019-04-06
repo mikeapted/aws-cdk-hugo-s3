@@ -14,15 +14,15 @@ export class HugoAwsCdkStack extends cdk.Stack {
     // Setup based on envrionment variables
 
     // Domain name to use for the site
-    const domainName = process.env.DOMAIN ? process.env.DOMAIN : 'my.static.site';
+    const domainName = this.node.getContext("domain") ? this.node.getContext("domain"): process.env.DOMAIN ? process.env.DOMAIN : 'my.static.site';
     /*
       Until DNS validation is available in CloudFormation, it’s probably better to provision your 
       certificates either in a separate stack from your main service, or provision them manually.
       In both cases, you’ll import the certificate into your stack afterwards.
     */
-    const sslCertificateArn = process.env.CERTIFICATE ? process.env.CERTIFICATE : '';
-    const hugoVersion = process.env.HUGO_VERSION ? process.env.HUGO_VERSION : '0.54.0';
-    const hugoSHA256 = process.env.HUGO_SHA256 ? process.env.HUGO_SHA256 : '76f90287c12a682c9137b85146c406be410b2b30b0df7367f02ee7c4142bb416';
+    const sslCertificateArn = this.node.getContext("certificate") ? this.node.getContext("certificate"): process.env.CERTIFICATE ? process.env.CERTIFICATE : '';
+    const hugoVersion = this.node.getContext("hugoVersion") ? this.node.getContext("hugoVersion"): process.env.HUGO_VERSION ? process.env.HUGO_VERSION : '0.54.0';
+    const hugoSHA256 = this.node.getContext("hugoSHA256") ? this.node.getContext("hugoSHA256"): process.env.HUGO_SHA256 ? process.env.HUGO_SHA256 : '76f90287c12a682c9137b85146c406be410b2b30b0df7367f02ee7c4142bb416';
 
     // Repository for source code
 

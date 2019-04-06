@@ -1,3 +1,9 @@
 {
-  "app": "node bin/hugo-aws-cdk.js"
+  "app": "node bin/hugo-aws-cdk.js",
+  "context": {
+    "domain": "",
+    "certificate": "",
+    "hugoVersion": "",
+    "hugoSHA256": ""
+  }
 }
